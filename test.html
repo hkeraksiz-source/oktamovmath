@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testlar | O'ktamov Math</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Selection Screen Styles */
+        .selection-container {
+            min-height: 80vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 3rem;
+            padding: 2rem;
+            flex-wrap: wrap;
+            perspective: 1000px;
+        }
+
+        .choice-card {
+            width: 300px;
+            height: 400px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            backdrop-filter: blur(20px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .choice-card:hover {
+            transform: translateY(-20px) scale(1.05);
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.2);
+        }
+
+        .choice-card.alt:hover {
+            border-color: var(--neon-magenta);
+            box-shadow: 0 0 30px rgba(188, 19, 254, 0.2);
+        }
+
+        .choice-icon {
+            font-size: 5rem;
+            margin-bottom: 2rem;
+            transition: 0.5s;
+        }
+
+        .choice-card:hover .choice-icon {
+            transform: scale(1.2) rotate(10deg);
+            text-shadow: 0 0 20px currentColor;
+        }
+
+        .choice-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #fff;
+            z-index: 1;
+        }
+
+        .choice-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, transparent, rgba(0, 243, 255, 0.1));
+            opacity: 0;
+            transition: 0.5s;
+        }
+
+        .choice-card.alt .choice-bg {
+            background: linear-gradient(180deg, transparent, rgba(188, 19, 254, 0.1));
+        }
+
+        .choice-card:hover .choice-bg {
+            opacity: 1;
+        }
+
+        /* Content Sections */
+        .content-section {
+            display: none;
+            padding: 8rem 5% 4rem;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .test-item-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-radius: 15px;
+            border: 1px solid var(--glass-border);
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .test-item-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--neon-cyan);
+            background: rgba(0, 243, 255, 0.05);
+        }
+
+        .test-id {
+            font-size: 1.5rem;
+            color: var(--neon-cyan);
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .test-count {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 100px;
+            left: 5%;
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--neon-cyan);
+            transition: 0.3s;
+            z-index: 100;
+        }
+
+        .back-btn:hover {
+            transform: translateX(-5px);
+            text-shadow: 0 0 10px var(--neon-cyan);
+        }
+
+        .admin-form {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 1px solid var(--neon-purple);
+            max-width: 500px;
+            margin: 2rem auto;
+            position: relative;
+        }
+
+        /* Result Box */
+        .result-box {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            display: none;
+            border-left: 4px solid var(--neon-purple);
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .result-box.success {
+            border-color: var(--neon-cyan);
+        }
+
+        .result-box.error {
+            border-color: #ff0055;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="bg-animation">
+        <div class="bg-shape shape-1"></div>
+        <div class="bg-shape shape-2"></div>
+    </div>
+
+    <!-- Nav -->
+    <nav>
+        <div class="logo">O'ktamov<span style="color:white">Math</span></div>
+        <input type="checkbox" id="menu-toggle">
+        <label for="menu-toggle" class="menu-btn">☰</label>
+        <div class="nav-links">
+            <a href="index.html">Bosh sahifa</a>
+            <a href="about.html">Biz haqimizda</a>
+            <a href="courses.html">Kurslar</a>
+            <a href="test.html" style="color: var(--neon-cyan)">Testlar</a>
+            <a href="contact.html">Bog'lanish</a>
+        </div>
+    </nav>
+
+    <!-- Main Selection Screen -->
+    <div id="selectionScreen" class="selection-container" style="padding-top: 8rem;">
+
+        <!-- Option 1: Check Test -->
+        <div class="choice-card" onclick="showSection('check')">
+            <div class="choice-bg"></div>
+            <div class="choice-icon" style="color: var(--neon-cyan)">✓</div>
+            <div class="choice-title">Test Tekshirish</div>
+            <p style="color: #aaa; margin-top: 1rem; text-align: center; padding: 0 1rem; z-index: 1;">
+                Javoblaringizni kiriting va natijani darhol bilib oling
+            </p>
+        </div>
+
+        <!-- Option 2: View Tests -->
+        <div class="choice-card alt" onclick="showSection('list')">
+            <div class="choice-bg"></div>
+            <div class="choice-icon" style="color: var(--neon-purple)">☰</div>
+            <div class="choice-title">Testlar Ro'yxati</div>
+            <p style="color: #aaa; margin-top: 1rem; text-align: center; padding: 0 1rem; z-index: 1;">
+                Mavjud testlarni ko'rish va yangi test qo'shish (Admin)
+            </p>
+        </div>
+
+    </div>
+
+    <!-- Section: Check Test -->
+    <div id="sectionCheck" class="content-section">
+        <div class="back-btn" onclick="goBack()">← Orqaga</div>
+
+        <div style="max-width: 600px; margin: 0 auto; text-align: center;">
+            <h1 style="font-size: 3rem; margin-bottom: 3rem; color: #fff;">Test <span
+                    style="color: var(--neon-cyan)">Tekshirish</span></h1>
+
+            <div
+                style="background: rgba(255,255,255,0.03); padding: 3rem; border-radius: 20px; border: 1px solid var(--glass-border); box-shadow: 0 20px 50px rgba(0,0,0,0.5);">
+                <div class="input-group" style="margin-bottom: 2rem; position: relative;">
+                    <input type="text" id="studentTestId" required
+                        style="width: 100%; padding: 15px; background: transparent; border: none; border-bottom: 2px solid #555; color: #fff; font-size: 1.2rem; outline: none; transition: 0.3s; padding: 10px;">
+                    <label
+                        style="position: absolute; left: 10px; top: 10px; color: #777; transition: 0.3s; pointer-events: none;">Test
+                        Kodi (ID)</label>
+                </div>
+
+                <div class="input-group" style="margin-bottom: 3rem; position: relative;">
+                    <input type="text" id="studentAnswers" required
+                        style="width: 100%; padding: 15px; background: transparent; border: none; border-bottom: 2px solid #555; color: #fff; font-size: 1.2rem; outline: none; transition: 0.3s; padding: 10px;">
+                    <label
+                        style="position: absolute; left: 10px; top: 10px; color: #777; transition: 0.3s; pointer-events: none;">Javoblaringiz
+                        (abc...)</label>
+                </div>
+
+                <button onclick="checkTest()" class="btn-neon"
+                    style="width: 100%; padding: 1rem; font-size: 1.2rem; cursor: pointer; border: 1px solid var(--neon-cyan); background: rgba(0,243,255,0.1); color: var(--neon-cyan); transition: 0.3s;">
+                    TEKSHIRISH
+                </button>
+            </div>
+
+            <div id="checkResult" class="result-box"></div>
+        </div>
+    </div>
+
+    <!-- Section: Tests List -->
+    <div id="sectionList" class="content-section">
+        <div class="back-btn" onclick="goBack()">← Orqaga</div>
+
+        <div style="max-width: 1000px; margin: 0 auto;">
+            <div
+                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem; flex-wrap: wrap; gap: 1rem;">
+                <h1 style="font-size: 3rem;">Mavjud <span style="color: var(--neon-purple)">Testlar</span></h1>
+                <button onclick="toggleAdminPanel()"
+                    style="background: transparent; border: 1px solid var(--neon-purple); color: var(--neon-purple); padding: 0.5rem 1.5rem; border-radius: 50px; cursor: pointer; transition: 0.3s;">Admin
+                    Kirish</button>
+            </div>
+
+            <div id="publicTestList" class="test-grid">
+                <!-- Tests injected by JS -->
+            </div>
+
+            <!-- Admin Panel (Hidden by default) -->
+            <div id="adminPanel" style="display: none; margin-top: 3rem;">
+                <h2 style="text-align: center; margin-bottom: 1rem; color: var(--neon-purple)">Admin Paneli</h2>
+
+                <div id="adminLogin">
+                    <div style="display: flex; gap: 1rem; justify-content: center;">
+                        <input type="password" id="adminPass" placeholder="Admin Paroli"
+                            style="padding: 10px; border-radius: 5px; border: none;">
+                        <button onclick="adminAuth()"
+                            style="padding: 10px 20px; background: var(--neon-purple); border: none; color: #fff; cursor: pointer;">Kirish</button>
+                    </div>
+                </div>
+
+                <div id="adminDashboard" style="display: none;" class="admin-form">
+                    <div
+                        style="display: flex; gap: 1rem; margin-bottom: 2rem; border-bottom: 1px solid #333; padding-bottom: 1rem;">
+                        <span onclick="switchAdminTab('tests')" id="tabTests"
+                            style="cursor: pointer; color: var(--neon-purple); border-bottom: 2px solid var(--neon-purple);">Test
+                            Qo'shish</span>
+                        <span onclick="switchAdminTab('users')" id="tabUsers"
+                            style="cursor: pointer; color: #777;">Foydalanuvchilar Faoliyati</span>
+                    </div>
+
+                    <div id="adminTestsTab">
+                        <h3 style="margin-bottom: 1.5rem;">Yangi Test Joylash</h3>
+                        <input type="text" id="newTestId" placeholder="Test Kodi (ID)"
+                            style="width: 100%; padding: 10px; margin-bottom: 1rem; background: rgba(255,255,255,0.1); border: 1px solid #555; color: #fff;">
+                        <input type="text" id="newTestAnswers" placeholder="To'g'ri Javoblar (abcde...)"
+                            style="width: 100%; padding: 10px; margin-bottom: 1rem; background: rgba(255,255,255,0.1); border: 1px solid #555; color: #fff;">
+                        <input type="text" id="newTestLink" placeholder="Test Fayli Havolasi (Link) - ixtiyoriy"
+                            style="width: 100%; padding: 10px; margin-bottom: 1.5rem; background: rgba(255,255,255,0.1); border: 1px solid #555; color: #fff;">
+                        <button onclick="saveTest()" class="btn-neon"
+                            style="width: 100%; border: none; cursor: pointer; color: var(--neon-purple); border-color: var(--neon-purple);">SAQLASH</button>
+                    </div>
+
+                    <div id="adminUsersTab" style="display: none;">
+                        <h3 style="margin-bottom: 1.5rem;">Foydalanuvchilar Ro'yxati</h3>
+                        <div id="userActivityList" style="max-height: 400px; overflow-y: auto;">
+                            <!-- Activity will be here -->
+                        </div>
+                    </div>
+
+                    <div id="adminMsg" style="margin-top: 1rem; color: #fff;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Init Storage
+        if (!localStorage.getItem('mathTests')) {
+            localStorage.setItem('mathTests', JSON.stringify({}));
+        }
+
+        // Navigation Logic
+        function showSection(type) {
+            document.getElementById('selectionScreen').style.display = 'none';
+            document.querySelectorAll('.content-section').forEach(el => el.classList.remove('active'));
+
+            if (type === 'check') {
+                document.getElementById('sectionCheck').classList.add('active');
+            } else if (type === 'list') {
+                document.getElementById('sectionList').classList.add('active');
+                renderTestList();
+            }
+        }
+
+        function goBack() {
+            document.querySelectorAll('.content-section').forEach(el => el.classList.remove('active'));
+            document.getElementById('selectionScreen').style.display = 'flex';
+        }
+
+        // Input Focus Effects
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('focus', () => {
+                // Check if nextElementSibling exists and is a label
+                if (input.nextElementSibling && input.nextElementSibling.tagName === 'LABEL') {
+                    input.nextElementSibling.style.top = '-20px';
+                    input.nextElementSibling.style.color = 'var(--neon-cyan)';
+                    input.nextElementSibling.style.fontSize = '0.8rem';
+                }
+            });
+            input.addEventListener('blur', () => {
+                // Check if nextElementSibling exists and is a label
+                if (input.nextElementSibling && input.nextElementSibling.tagName === 'LABEL') {
+                    if (!input.value) {
+                        input.nextElementSibling.style.top = '10px';
+                        input.nextElementSibling.style.color = '#777';
+                        input.nextElementSibling.style.fontSize = '1rem';
+                    }
+                }
+            });
+        });
+
+        // ------------------ Student Logic ------------------ //
+        function checkTest() {
+            const id = document.getElementById('studentTestId').value.trim();
+            const answers = document.getElementById('studentAnswers').value.trim().toLowerCase();
+            const resultBox = document.getElementById('checkResult');
+
+            if (!Auth.isLoggedIn()) {
+                alert("Testni tekshirish uchun tizimga kirishingiz shart!");
+                openAuthModal();
+                return;
+            }
+
+            const db = JSON.parse(localStorage.getItem('mathTests'));
+
+            if (!db[id]) {
+                showResult(resultBox, "❌ Bunday kodli test topilmadi!", "error");
+                return;
+            }
+
+            let correct = "";
+            if (typeof db[id] === 'string') {
+                correct = db[id].toLowerCase();
+            } else {
+                correct = db[id].answers.toLowerCase();
+            }
+
+            if (answers.length !== correct.length) {
+                showResult(resultBox, `⚠️ Javoblar soni mos emas!<br>Kutilmoqda: ${correct.length} ta<br>Sizda: ${answers.length} ta`, "error");
+                return;
+            }
+
+            let score = 0;
+            let resultHTML = '<div class="result-grid">';
+
+            for (let i = 0; i < correct.length; i++) {
+                const isMatch = answers[i] === correct[i];
+                if (isMatch) score++;
+
+                resultHTML += `<div class="res-item ${isMatch ? 'correct' : 'wrong'}" title="${isMatch ? "To'g'ri" : `Xato. To'g'ri javob: ${correct[i].toUpperCase()}`}">
+                    ${i + 1}
+                </div>`;
+            }
+            resultHTML += '</div>';
+
+            const percent = Math.round((score / correct.length) * 100);
+
+            Auth.logActivity('test', {
+                testId: id,
+                score: score,
+                total: correct.length,
+                percent: percent
+            });
+
+            let msg = `<h2 style="color: ${score === correct.length ? '#0f0' : '#fff'}">Natija: ${score} / ${correct.length} (${percent}%)</h2>`;
+            msg += resultHTML;
+
+            if (score === correct.length) {
+                msg += `<p style="margin-top:20px; color: var(--neon-cyan)">Mukammal! 🎉</p>`;
+            }
+
+            showResult(resultBox, msg, "success");
+        }
+
+        function showResult(el, msg, type) {
+            el.style.display = 'block';
+            el.innerHTML = msg;
+            el.className = `result-box ${type}`;
+        }
+
+        // ------------------ List & Admin Logic ------------------ //
+        function renderTestList() {
+            const listContainer = document.getElementById('publicTestList');
+            const db = JSON.parse(localStorage.getItem('mathTests'));
+            const keys = Object.keys(db);
+
+            if (keys.length === 0) {
+                listContainer.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #777;">Hozircha testlar mavjud emas.</p>';
+                return;
+            }
+
+            listContainer.innerHTML = keys.map(key => {
+                let count = 0;
+                let link = null;
+
+                if (typeof db[key] === 'string') {
+                    count = db[key].length;
+                } else {
+                    count = db[key].answers.length;
+                    link = db[key].link;
+                }
+
+                return `
+                <div class="test-item-card">
+                    <div style="cursor: pointer;" onclick="copyId('${key}')" title="Testni yechish">
+                        <div class="test-id">#${key}</div>
+                        <div class="test-count">${count} ta savol</div>
+                    </div>
+                    ${link ? `<a href="${link}" target="_blank" class="btn-neon" style="display:block; margin-top:1rem; text-align:center; font-size:0.8rem; padding: 0.5rem;">📥 Faylni Yuklash</a>` : ''}
+                </div>
+            `}).join('');
+        }
+
+        function copyId(id) {
+            showSection('check');
+            document.getElementById('studentTestId').value = id;
+            document.getElementById('studentAnswers').focus();
+        }
+
+        function toggleAdminPanel() {
+            const panel = document.getElementById('adminPanel');
+            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+            if (panel.style.display === 'block') document.getElementById('adminLogin').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function adminAuth() {
+            const pass = document.getElementById('adminPass').value;
+            if (pass === 'admin123') {
+                document.getElementById('adminLogin').style.display = 'none';
+                document.getElementById('adminDashboard').style.display = 'block';
+                renderUserActivity();
+            } else {
+                alert("Noto'g'ri parol!");
+            }
+        }
+
+        function switchAdminTab(tab) {
+            const testsTab = document.getElementById('adminTestsTab');
+            const usersTab = document.getElementById('adminUsersTab');
+            const tabTests = document.getElementById('tabTests');
+            const tabUsers = document.getElementById('tabUsers');
+
+            if (tab === 'tests') {
+                testsTab.style.display = 'block';
+                usersTab.style.display = 'none';
+                tabTests.style.color = 'var(--neon-purple)';
+                tabTests.style.borderBottom = '2px solid var(--neon-purple)';
+                tabUsers.style.color = '#777';
+                tabUsers.style.borderBottom = 'none';
+            } else {
+                testsTab.style.display = 'none';
+                usersTab.style.display = 'block';
+                tabUsers.style.color = 'var(--neon-purple)';
+                tabUsers.style.borderBottom = '2px solid var(--neon-purple)';
+                tabTests.style.color = '#777';
+                tabTests.style.borderBottom = 'none';
+                renderUserActivity();
+            }
+        }
+
+        function renderUserActivity() {
+            const container = document.getElementById('userActivityList');
+            const users = JSON.parse(localStorage.getItem('math_users')) || {};
+            const userKeys = Object.keys(users);
+
+            if (userKeys.length === 0) {
+                container.innerHTML = "<p style='color: #777; text-align: center;'>Foydalanuvchilar mavjud emas.</p>";
+                return;
+            }
+
+            container.innerHTML = userKeys.map(username => {
+                const u = users[username];
+                const activityHTML = u.activity && u.activity.length > 0
+                    ? u.activity.map(a => `<div style="font-size: 0.8rem; background: rgba(255,255,255,0.05); padding: 5px; margin-top: 5px; border-left: 2px solid var(--neon-cyan)">
+                        [${new Date(a.time).toLocaleTimeString()}] Test #${a.data.testId}: ${a.data.score}/${a.data.total} (${a.data.percent}%)
+                      </div>`).join('')
+                    : "<p style='font-size: 0.8rem; color: #555;'>Hali test ishlamagan</p>";
+
+                return `
+                <div style="border-bottom: 1px solid #333; padding-bottom: 1rem; margin-bottom: 1rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <strong style="color: var(--neon-cyan);">${username}</strong>
+                        <small style="color: #555;">${new Date(u.regDate).toLocaleDateString()}</small>
+                    </div>
+                    <div style="font-size: 0.9rem; color: #ddd; margin-top: 5px;">
+                        📞 Tel: ${u.phone || 'Noma\'lum'}
+                    </div>
+                    ${activityHTML}
+                </div>
+                `;
+            }).join('');
+        }
+
+        function saveTest() {
+            const id = document.getElementById('newTestId').value.trim();
+            const answers = document.getElementById('newTestAnswers').value.trim().toLowerCase();
+            const link = document.getElementById('newTestLink').value.trim();
+            const msgBox = document.getElementById('adminMsg');
+
+            if (!id || !answers) {
+                msgBox.innerHTML = "Ma'lumotlar to'liq emas!";
+                msgBox.style.color = "red";
+                return;
+            }
+
+            const db = JSON.parse(localStorage.getItem('mathTests'));
+
+            // Save as object
+            db[id] = {
+                answers: answers,
+                link: link
+            };
+
+            localStorage.setItem('mathTests', JSON.stringify(db));
+
+            msgBox.innerHTML = "Test muvaffaqiyatli saqlandi!";
+            msgBox.style.color = "#0f0";
+            renderTestList();
+
+            // Clear inputs
+            document.getElementById('newTestId').value = '';
+            document.getElementById('newTestAnswers').value = '';
+            document.getElementById('newTestLink').value = '';
+
+            setTimeout(() => { msgBox.innerHTML = ''; }, 3000);
+        }
+    </script>
+    <script src="script.js"></script>
+</body>
+
+</html>

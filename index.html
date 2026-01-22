@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="keywords" content="o'ktamovmath">
+    <meta name="description" content="O'zbek tilida matematik darsliklar va testlar yechish uchun platforma">
+    <meta name="author" content="Orzikulov Ruslan">
+    <title>O'ktamov Math</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- Background Layer -->
+    <div class="bg-animation">
+        <div class="bg-shape shape-1"></div>
+        <div class="bg-shape shape-2"></div>
+        <div class="math-symbol sym-1">∫</div>
+        <div class="math-symbol sym-2">π</div>
+        <div class="math-symbol sym-3">∑</div>
+        <div class="math-symbol sym-4">∞</div>
+
+        <!-- Merged Overlays into Fixed BG to prevent document height expansion -->
+        <div class="fog-container">
+            <div class="fog-img"></div>
+        </div>
+        <div class="noise-overlay"></div>
+        <div class="vignette"></div>
+        <div class="scanlines"></div>
+        <div class="aurora-bg"></div>
+        <div class="grid-floor"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">O'ktamov<span style="color:white">Math</span></div>
+        <input type="checkbox" id="menu-toggle">
+        <label for="menu-toggle" class="menu-btn">☰</label>
+        <div class="nav-links">
+            <a href="index.html" style="color: var(--neon-cyan)">Bosh sahifa</a>
+            <a href="about.html">Biz haqimizda</a>
+            <a href="courses.html">Kurslar</a>
+            <a href="test.html">Testlar</a>
+            <a href="innovation.html">Grafik</a>
+            <a href="contact.html">Bog'lanish</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-card">
+            <h1>Matematika Olamiga Xush Kelibsiz</h1>
+            <p>Algebra, Geometriya va Informatika bo'yicha eng so'nggi va innovatsion kurslar.</p>
+            <a href="courses.html" class="btn-neon">Boshlash</a>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services-section">
+        <h2 class="section-title">Maxsus Xizmatlar</h2>
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon">👨‍🏫</div>
+                <h3>Onlayn Repetitor</h3>
+                <p>Individual darslar va maslahatlar.</p>
+                <a href="contact.html" class="service-btn">Bog'lanish</a>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">📝</div>
+                <h3>Masala Yechim</h3>
+                <p>Qiyin misollar yechimi.</p>
+                <a href="contact.html" class="service-btn">Yuborish</a>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">🚀</div>
+                <h3>Individual Reja</h3>
+                <p>Moslashtirilgan o'quv dasturi.</p>
+                <a href="contact.html" class="service-btn">Boshlash</a>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">🤖</div>
+                <h3>AI Beta</h3>
+                <p>Sun'iy ongli tahlilchi.</p>
+                <a href="#" class="service-btn">Tez Orada</a>
+            </div>
+            <!-- New Services -->
+            <div class="service-card">
+                <div class="service-icon">🏆</div>
+                <h3>Olimpiada</h3>
+                <p>Xalqaro olimpiadalarga tayyorlov.</p>
+                <a href="contact.html" class="service-btn">Qo'shilish</a>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">📜</div>
+                <h3>SAT / GMAT</h3>
+                <p>Xalqaro sertifikat imtihonlari.</p>
+                <a href="contact.html" class="service-btn">O'rganish</a>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">💻</div>
+                <h3>Math & Code</h3>
+                <p>Matematik dasturlash (Python).</p>
+                <a href="contact.html" class="service-btn">Kodlash</a>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">🔬</div>
+                <h3>STEM Lab</h3>
+                <p>Amaliy fan loyihalari.</p>
+                <a href="contact.html" class="service-btn">Ko'rish</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Floating Social Bar -->
+    <div class="social-float">
+        <a href="#" class="social-icon">tg</a>
+        <a href="#" class="social-icon">ins</a>
+        <a href="#" class="social-icon">yt</a>
+    </div>
+
+    <!-- Project Modal -->
+    <div id="projectModal" class="project-modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeProjectModal()">×</span>
+            <h2 id="modalTitle" style="color:var(--neon-cyan); margin-bottom:1rem;">Project Name</h2>
+            <p id="modalDesc" style="color:#ddd; margin-bottom:2rem;">Description goes here...</p>
+            <div
+                style="width:100%; height:200px; background: #000; border-radius:10px; margin-bottom:2rem; display:flex; align-items:center; justify-content:center; color:#555;">
+                3D Preview Loading...
+            </div>
+            <a href="#" class="btn-neon btn-liquid">Batafsil Ko'rish</a>
+        </div>
+    </div>
+    <!-- Three.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

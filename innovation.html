@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grafik | O'ktamovGraph</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+
+<body>
+
+    <!-- Background Layer -->
+    <div class="bg-animation">
+        <div class="bg-shape shape-1"></div>
+        <div class="bg-shape shape-2"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">O'ktamov<span style="color:white">Graph</span></div>
+        <div class="nav-links">
+            <a href="index.html">Bosh sahifa</a>
+            <a href="about.html">Biz haqimizda</a>
+            <a href="courses.html">Kurslar</a>
+            <a href="test.html">Testlar</a>
+            <a href="innovation.html" style="color: var(--neon-cyan)">Grafik</a>
+            <a href="contact.html">Bog'lanish</a>
+        </div>
+    </nav>
+    <div style="height: 80px;"></div>
+
+    <!-- Grapher Section -->
+    <section class="grapher-section">
+        <h2 class="section-title anim-text-gradient">O'ktamov Grapher</h2>
+        <p style="color: #aaa; margin-bottom: 2rem;">Funksiyalarni kiriting va ularning grafigini real vaqtda ko'ring.
+        </p>
+
+        <div class="grapher-container">
+            <div class="graph-controls">
+                <input type="text" id="functionInput" placeholder="y = sin(x) * x" value="sin(x) * x">
+                <div class="control-buttons">
+                    <button class="btn-neon" onclick="plotGraph()">Chizish</button>
+                    <button class="btn-neon" onclick="zoomIn()">+</button>
+                    <button class="btn-neon" onclick="zoomOut()">-</button>
+                    <button class="btn-neon" onclick="resetGraph()">Reset</button>
+                </div>
+                <div class="examples">
+                    <span onclick="setFunction('sin(x)')">sin(x)</span>
+                    <span onclick="setFunction('cos(x)')">cos(x)</span>
+                    <span onclick="setFunction('x*x')">x²</span>
+                    <span onclick="setFunction('Math.tan(x)')">tan(x)</span>
+                    <span onclick="setFunction('Math.log(x)')">log(x)</span>
+                </div>
+            </div>
+
+            <div class="canvas-wrapper">
+                <canvas id="graphCanvas"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <!-- Project Modal (Reused) -->
+    <div id="projectModal" class="project-modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeProjectModal()">×</span>
+            <h2 id="modalTitle" style="color:var(--neon-cyan); margin-bottom:1rem;">Project Name</h2>
+            <div id="modalDescContainer">
+                <p id="modalDesc" style="color:#ddd; margin-bottom:2rem;">Description goes here...</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
